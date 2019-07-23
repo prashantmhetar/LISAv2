@@ -3,7 +3,7 @@
         <TestName>VERIFY-DEPLOYMENT-PROVISION</TestName>
         <testScript>VERIFY-DEPLOYMENT-PROVISION.ps1</testScript>
         <files></files>
-        <setupType>OneVM</setupType>
+	<setupType>OneVM</setupType>
         <TestParameters>
             <!-- Custom expected number of cores inside the VM. Empty by default. -->
             <param>vCpu=VCPU</param>
@@ -13,6 +13,37 @@
         <Area>CORE</Area>
         <Tags>provision</Tags>
         <Priority>0</Priority>
+    </test>
+    <test>
+        <TestName>VERIFY-DEPLOYMENT-PROVISION-WIN</TestName>
+        <files></files>
+	<!-- <setupType>OneVM</setupType> -->
+        <setupType>OneVMWin</setupType>
+        <TestParameters>
+            <!-- Custom expected number of cores inside the VM. Empty by default. -->
+            <param>vCpu=VCPU</param>
+        </TestParameters>
+        <Platform>Azure,HyperV</Platform>
+        <Category>Functional</Category>
+        <Area>CORE</Area>
+        <Tags>provision</Tags>
+        <Priority>0</Priority>
+    </test>
+    <test>
+        <testName>PERF-GOLANG-BENCHMARK</testName>
+        <TestScript>PERF-GOLANG-BENCHMARK.ps1</TestScript>
+        <setupType>OneVM</setupType>
+        <OverrideVMSize>Standard_D13_v2</OverrideVMSize>
+        <files>.\Testscripts\Linux\utils.sh,.\Testscripts\Linux\golang-benchmark.sh</files>
+        <Platform>Azure,HyperV,WSL</Platform>
+        <TestParameters>
+            <param>GOLANG_BENCHMARK_CODE=https://partnerpipelineshare.blob.core.windows.net/binarytools/golang_benchmark.tar.gz</param>
+            <param>GOLANG_INSTALL_PACKAGE=https://partnerpipelineshare.blob.core.windows.net/binarytools/go1.11.4.linux-amd64.tar.gz</param>
+        </TestParameters>
+        <Category>Performance</Category>
+        <Area>GOLANG</Area>
+        <Tags>golang</Tags>
+        <Priority>2</Priority>
     </test>
     <test>
         <TestName>VERIFY-DEPLOYMENT-PROVISION-EPHEMERAL-MANAGED-DISK</TestName>

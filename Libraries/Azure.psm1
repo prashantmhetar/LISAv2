@@ -717,6 +717,14 @@ Function Generate-AzureDeployJSONFile ($RGName, $ImageName, $osVHD, $RGXMLData, 
     }
 
     $UseSpecializedImage = $CurrentTestData.AdditionalHWConfig.ImageType -contains "Specialized"
+    $IsWindowsOS = $CurrentTestData.AdditionalHWConfig.OSType -contains "Windows"
+    if ($IsWindowsOS) {
+    	$OSType = "Windows"
+    } else {
+	$OSType = "Linux"
+    }
+    Write-LogInfo "OSType : retrived parameter $OSType "
+
 
     if ( $CurrentTestData.AdditionalHWConfig.OSDiskType -eq "Ephemeral" ) {
         if ( $UseManagedDisks ) {
@@ -1051,7 +1059,9 @@ Function Generate-AzureDeployJSONFile ($RGName, $ImageName, $osVHD, $RGXMLData, 
 
         Add-Content -Value "$($indents[5])^osDisk^: " -Path $jsonFile
         Add-Content -Value "$($indents[5]){" -Path $jsonFile
-        Add-Content -Value "$($indents[6])^osType^: ^Linux^," -Path $jsonFile
+	Write-LogInfo "OSType : for managed disk $OSType "
+        Add-Content -Value "$($indents[6])^osType^: ^$OSType^," -Path $jsonFile
+
         Add-Content -Value "$($indents[6])^osState^: ^Generalized^," -Path $jsonFile
         Add-Content -Value "$($indents[6])^blobUri^: ^https://$StorageAccountName.blob.core.windows.net/vhds/$OsVHD^," -Path $jsonFile
         Add-Content -Value "$($indents[6])^storageAccountType^: ^$StorageAccountType^," -Path $jsonFile
@@ -1723,7 +1733,9 @@ Function Generate-AzureDeployJSONFile ($RGName, $ImageName, $osVHD, $RGXMLData, 
         if ($osVHD) {
             if ($UseManagedDisks) {
                 Write-LogInfo ">>> Using VHD : $osVHD (Converted to Managed Image)"
-                Add-Content -Value "$($indents[6])^osType^: ^Linux^," -Path $jsonFile
+
+		Write-LogInfo "OSType : for managed VHD $OSType "
+        	Add-Content -Value "$($indents[6])^osType^: ^$OSType^," -Path $jsonFile
                 Add-Content -Value "$($indents[6])^name^: ^$vmName-OSDisk^," -Path $jsonFile
                 Add-Content -Value "$($indents[6])^managedDisk^: " -Path $jsonFile
                 Add-Content -Value "$($indents[6]){" -Path $jsonFile
@@ -1755,7 +1767,10 @@ Function Generate-AzureDeployJSONFile ($RGName, $ImageName, $osVHD, $RGXMLData, 
                     } else {
                         Write-LogInfo "New Base VHD name - $destVHDName"
                     }
-                    Add-Content -Value "$($indents[6])^osType^: ^Linux^," -Path $jsonFile
+	
+		Write-LogInfo ">>> OSType : $OSType in unamanged for specialized image"
+
+        		Add-Content -Value "$($indents[6])^osType^: ^$OSType^," -Path $jsonFile
                     Add-Content -Value "$($indents[6])^name^: ^$vmName-OSDisk^," -Path $jsonFile
                     #Add-Content -Value "$($indents[6])^osType^: ^Linux^," -Path $jsonFile
                     Add-Content -Value "$($indents[6])^vhd^: " -Path $jsonFile
@@ -1770,7 +1785,8 @@ Function Generate-AzureDeployJSONFile ($RGName, $ImageName, $osVHD, $RGXMLData, 
                     Add-Content -Value "$($indents[6]){" -Path $jsonFile
                     Add-Content -Value "$($indents[7])^uri^: ^[concat('http://',variables('StorageAccountName'),'.blob.core.windows.net/vhds/','$osVHD')]^" -Path $jsonFile
                     Add-Content -Value "$($indents[6])}," -Path $jsonFile
-                    Add-Content -Value "$($indents[6])^osType^: ^Linux^," -Path $jsonFile
+		Write-LogInfo ">>> OSType : $OSType in unamanged for non-specialized image"
+        		Add-Content -Value "$($indents[6])^osType^: ^$OSType^," -Path $jsonFile
                     Add-Content -Value "$($indents[6])^name^: ^$vmName-OSDisk^," -Path $jsonFile
                     #Add-Content -Value "$($indents[6])^osType^: ^Linux^," -Path $jsonFile
                     Add-Content -Value "$($indents[6])^vhd^: " -Path $jsonFile
