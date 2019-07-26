@@ -380,8 +380,8 @@ function InstallKernel() {
         customKernelFilesUnExpanded="${CustomKernel#$LOCAL_FILE_PREFIX}"
         LogMsg "Removing packages that do not allow the kernel to be installed"
         if [[ "${customKernelFilesUnExpanded}" == *'*.rpm'* ]]; then
-            LogMsg "Removing: ${KERNEL_CONFLICTING_PACKAGES}"
-            remove_package "${KERNEL_CONFLICTING_PACKAGES}"
+            LogMsg "ignoring Removing: ${KERNEL_CONFLICTING_PACKAGES}"
+           # remove_package "${KERNEL_CONFLICTING_PACKAGES}"
         fi
 
         LogMsg "Installing ${customKernelFilesUnExpanded}"
